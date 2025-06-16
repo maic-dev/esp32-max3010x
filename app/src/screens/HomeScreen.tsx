@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { useEffect, useState } from 'react';
 import { database } from '../config/firebase';
 import { ref, onValue } from 'firebase/database';
+import ModalHome from '../components/ModalHome';
 
 interface SensorData {
   Sp02?: number;
@@ -10,32 +11,40 @@ interface SensorData {
 
 const HomeScreen = () => {
   const [sensorData, setSensorData] = useState<SensorData>({});
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const sensorRef = ref(database, 'sensor');
-    
+
     const unsubscribe = onValue(sensorRef, (snapshot) => {
       const data = snapshot.val();
       setSensorData(data || {});
     });
 
-    // Cleanup subscription
     return () => unsubscribe();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sensor Readings</Text>
-      
+      <Text style={styles.title}>-`♡´- Medical APP -`♡´-</Text>
+
       <View style={styles.readingContainer}>
-        <Text style={styles.label}>SpO2:</Text>
+        <Text style={styles.label}>🩸 SpO2:</Text>
         <Text style={styles.value}>{sensorData.Sp02 ?? 'Loading...'} %</Text>
       </View>
 
       <View style={styles.readingContainer}>
-        <Text style={styles.label}>Bpm:</Text>
+        <Text style={styles.label}>❤️ Bpm:</Text>
         <Text style={styles.value}>{sensorData.BPM ?? 'Loading...'} BPM</Text>
       </View>
+
+      <Button title="Guardar datos" onPress={() => setModalVisible(true)} />
+
+      <ModalHome
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        sensorData={sensorData}
+      />
     </View>
   );
 };
@@ -47,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 30,
@@ -71,12 +80,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   label: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#666',
     fontWeight: '500',
   },
   value: {
-    fontSize: 20,
+    fontSize: 15,
     color: '#007AFF',
     fontWeight: 'bold',
   },
