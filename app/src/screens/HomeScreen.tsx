@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
+import { Button } from 'react-native-paper';
 import { database } from '../config/firebase';
 import { ref, onValue } from 'firebase/database';
 import ModalHome from '../components/ModalHome';
@@ -26,19 +27,33 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>-`♡´- Medical APP -`♡´-</Text>
+      <Text style={styles.title}>-`🩺´- Lecturas</Text>
 
       <View style={styles.readingContainer}>
         <Text style={styles.label}>🩸 SpO2:</Text>
-        <Text style={styles.value}>{sensorData.Sp02 ?? 'Loading...'} %</Text>
+        <Text style={[styles.value, sensorData.Sp02 !== undefined && sensorData.Sp02 > 80 ? styles.danger : null]}>
+          {sensorData.Sp02 ?? 'Loading...'} %
+        </Text>
       </View>
 
       <View style={styles.readingContainer}>
         <Text style={styles.label}>❤️ Bpm:</Text>
-        <Text style={styles.value}>{sensorData.BPM ?? 'Loading...'} BPM</Text>
+        <Text style={[styles.value, sensorData.BPM !== undefined && sensorData.BPM > 100 ? styles.danger : null]}>
+          {sensorData.BPM ?? 'Loading...'} BPM
+        </Text>
       </View>
 
-      <Button title="Guardar datos" onPress={() => setModalVisible(true)} />
+      <Button
+        mode="outlined"
+        icon="content-save"
+        onPress={() => setModalVisible(true)}
+        style={styles.saveButton}
+        contentStyle={{ paddingVertical: 5 }}
+        labelStyle={{ color: '#007AFF', fontWeight: 'bold' }}
+      >
+        Guardar datos
+      </Button>
+
 
       <ModalHome
         visible={modalVisible}
@@ -56,11 +71,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 22,
+    fontSize: 17,
     fontWeight: 'bold',
+    fontStyle: 'italic',
     color: '#333',
-    marginBottom: 30,
-    textAlign: 'center',
+    marginBottom: 12,
   },
   readingContainer: {
     backgroundColor: 'white',
@@ -89,6 +104,15 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: 'bold',
   },
+  danger: {
+    color: 'red',
+  },
+  saveButton: {
+    borderColor: '#007AFF',
+    borderWidth: 1.2,
+    borderRadius: 8,
+  },
+
 });
 
 export default HomeScreen;

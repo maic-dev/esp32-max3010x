@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native';
+import { Button, Appbar } from 'react-native-paper';
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { dbfirestore } from '../config/firebase';
 import ModalPatientSave from '../components/ModalPatientSave';
@@ -88,7 +89,17 @@ const PatientScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Registrar Paciente" onPress={handleOpenAddModal} />
+      <Button
+        mode="outlined"
+        icon="plus"
+        onPress={handleOpenAddModal}
+        style={styles.addButton}
+        contentStyle={{ paddingVertical: 5 }}
+        labelStyle={{ color: '#007AFF', fontWeight: 'bold' }}
+      >
+        Registrar Paciente
+      </Button>
+
       <FlatList
         data={patients}
         keyExtractor={(item) => item.id}
@@ -126,6 +137,11 @@ const styles = StyleSheet.create({
   patientName: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  addButton: {
+    borderColor: '#007AFF',
+    borderWidth: 1.2,
+    borderRadius: 8,
   },
   buttonsRow: {
     flexDirection: 'row',
